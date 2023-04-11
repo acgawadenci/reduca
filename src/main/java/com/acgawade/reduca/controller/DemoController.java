@@ -19,22 +19,6 @@ public class DemoController {
 
     @GetMapping("/")
     public String demoResponse() {
-        Product prod = new Product();
-        prod.setStatus("A");
-        prod.setId(UUID.randomUUID());
-        prod.setName("Herculous Bike");
-        prod.setAddress("Fairview, Dublin 10");
-        prod.setFeatures(List.of("Strong Chassis", "New model", "Repainted colour"));
-        prod.setPrice(new BigDecimal(25));
-        prod.setImages(List.of("https://x22103228-cpp.s3.eu-west-1.amazonaws.com/propId/344d8c1b-5b07-4937-9283-888962b987ac.png",
-                "https://x22103228-cpp.s3.eu-west-1.amazonaws.com/propId/344d8c1b-5b07-4937-9283-888962b987ac.png",
-                "https://x22103228-cpp.s3.eu-west-1.amazonaws.com/propId/344d8c1b-5b07-4937-9283-888962b987ac.png",
-                "https://x22103228-cpp.s3.eu-west-1.amazonaws.com/propId/344d8c1b-5b07-4937-9283-888962b987ac.png"));
-        prod.setPostedBy("Backend");
-        prod.setYearMade("2018");
-        prod.setDescription("Very good cycle");
-        prod.setPostedOn(LocalDateTime.now());
-        productRepository.save(prod);
         return "This is my demo Controller, Hello User !!!";
     }
 
