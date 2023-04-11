@@ -26,7 +26,7 @@ public class ImageService {
     public ResponseModel storeImage(MultipartFile file) {
         ResponseModel response = new ResponseModel();
         try {
-            String resp = uploadFile(generateFileName("propId", file.getContentType().split("/")[1]), file.getInputStream());
+            String resp = uploadFile(generateFileName("myPropId", file.getContentType().split("/")[1]), file.getInputStream());
             response.setStatus("SUCCESS");
             response.setMessage(resp);
         } catch (IOException e) {
