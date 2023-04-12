@@ -22,11 +22,17 @@ public class ImageService {
     private static final String BUCKET = "x22103228-cpp";
     @Autowired
     AwsSessionCredentials awsSessionCredentials;
+    @Autowired
+    ProductService productService;
 
-    public ResponseModel storeImage(MultipartFile file) {
+    private String properyId;
+
+    public ResponseModel storeImage(MultipartFile file, String propertyId) {
         ResponseModel response = new ResponseModel();
+        this.properyId = propertyId;
+
         try {
-            String resp = uploadFile(generateFileName("myPropId", file.getContentType().split("/")[1]), file.getInputStream());
+            String resp = uploadFile(generateFileName(propertyId, file.getContentType().split("/")[1]), file.getInputStream());
             response.setStatus("SUCCESS");
             response.setMessage(resp);
         } catch (IOException e) {
@@ -36,10 +42,9 @@ public class ImageService {
     }
 
     private String uploadFile(String fileName, InputStream inputStream) {
-        S3Client client = S3Client.builder().region(Region.EU_WEST_1)
+        try (S3Client client = S3Client.builder().region(Region.EU_WEST_1)
                 .credentialsProvider(StaticCredentialsProvider.create(awsSessionCredentials))
-                .build();
-        try {
+                .build()) {
             PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(BUCKET)
                     .key(fileName)
@@ -47,6 +52,7 @@ public class ImageService {
                     .build();
 
             PutObjectResponse response = client.putObject(request, RequestBody.fromInputStream(inputStream, inputStream.available()));
+            productService.updateImageUrl(properyId, fileName);
             return response.eTag();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -54,6 +60,7 @@ public class ImageService {
     }
 
     private String generateFileName(String propertyId, String contentType) {
-        return propertyId +"/"+ UUID.randomUUID()+"."+contentType;
+        return propertyId + "/" + UUID.randomUUID() + "." + contentType;
     }
+
 }

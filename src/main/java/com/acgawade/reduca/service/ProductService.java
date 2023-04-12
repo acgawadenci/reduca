@@ -4,7 +4,9 @@ import com.acgawade.reduca.entity.Product;
 import com.acgawade.reduca.model.ResponseModel;
 import com.acgawade.reduca.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,13 +21,17 @@ public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
+
     public List<Product> fetchProducts() {
         return productRepository.findByStatus(STATUS_ACTIVE);
     }
-    
+
+    @Value("${s3ImageUrl}")
+    private String s3ImageUrl;
+
     public ResponseModel saveProduct(Product property) {
-        ResponseModel response=new ResponseModel();
-        try{
+        ResponseModel response = new ResponseModel();
+        try {
             property.setId(UUID.randomUUID());
             property.setStatus("A");
             property.setPostedOn(LocalDateTime.now());
@@ -34,18 +40,18 @@ public class ProductService {
             response.setStatus("Success");
             response.setMessage("Operation Successful");
             response.setCreationId(property.getId().toString());
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setException(e.getLocalizedMessage());
         }
         return response;
     }
 
     public ResponseModel updateProduct(UUID propertyId, Product property) {
-        ResponseModel response=new ResponseModel();
-        try{
+        ResponseModel response = new ResponseModel();
+        try {
             productRepository.findById(propertyId).ifPresent(
                     savedProperty -> {
-                        if(savedProperty.getPostedBy().equalsIgnoreCase(property.getPostedBy())) {
+                        if (savedProperty.getPostedBy().equalsIgnoreCase(property.getPostedBy())) {
                             setUpdatedValues(savedProperty, property);
                             productRepository.save(savedProperty);
                             response.setStatus("Success");
@@ -56,7 +62,7 @@ public class ProductService {
                         }
                     }
             );
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setStatus("Unsuccessful");
             response.setMessage("Exception Occurred");
             response.setException(e.getLocalizedMessage());
@@ -65,33 +71,33 @@ public class ProductService {
     }
 
     private void setUpdatedValues(Product property, Product updatedProp) {
-        if(nonNull(updatedProp.getAddress()))
+        if (nonNull(updatedProp.getAddress()))
             property.setAddress(updatedProp.getAddress());
 
-        if(nonNull(updatedProp.getYearMade()))
+        if (nonNull(updatedProp.getYearMade()))
             property.setYearMade(updatedProp.getYearMade());
 
-        if(nonNull(updatedProp.getFeatures()))
+        if (nonNull(updatedProp.getFeatures()))
             property.setFeatures(updatedProp.getFeatures());
 
-        if(nonNull(updatedProp.getName()))
+        if (nonNull(updatedProp.getName()))
             property.setName(updatedProp.getName());
 
-        if(nonNull(updatedProp.getPrice()))
+        if (nonNull(updatedProp.getPrice()))
             property.setPrice(updatedProp.getPrice());
 
-        if(nonNull(updatedProp.getPostalCode()))
+        if (nonNull(updatedProp.getPostalCode()))
             property.setPostalCode(updatedProp.getPostalCode());
 
         property.setModifiedOn(LocalDateTime.now());
     }
 
     public ResponseModel inactiveProduct(UUID propertyId) {
-        ResponseModel response=new ResponseModel();
-        try{
+        ResponseModel response = new ResponseModel();
+        try {
             productRepository.findById(propertyId).ifPresent(
                     savedProperty -> {
-                        if(savedProperty.getPostedBy().equalsIgnoreCase("userPrinciple")) {
+                        if (savedProperty.getPostedBy().equalsIgnoreCase("userPrinciple")) {
                             savedProperty.setStatus("I");
                             productRepository.save(savedProperty);
                             response.setStatus("Success");
@@ -102,11 +108,25 @@ public class ProductService {
                         }
                     }
             );
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setStatus("Unsuccessful");
             response.setMessage("Exception Occurred");
             response.setException(e.getLocalizedMessage());
         }
         return response;
+    }
+
+    @Transactional
+    public void updateImageUrl(String propertyId, String fileKey) {
+        productRepository.findById(UUID.fromString(propertyId)).ifPresent(
+                product -> {
+                    if (nonNull(product.getImages())) {
+                        product.getImages().add(s3ImageUrl + fileKey);
+                    } else {
+                        product.setImages(List.of(s3ImageUrl + fileKey));
+                    }
+                    productRepository.save(product);
+                }
+        );
     }
 }
