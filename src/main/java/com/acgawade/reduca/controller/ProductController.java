@@ -38,4 +38,9 @@ public class ProductController {
     public ResponseEntity<ResponseModel> deleteProperty(@PathVariable UUID productId) {
         return new ResponseEntity<>(productService.inactiveProduct(productId), HttpStatus.OK);
     }
+
+    @PostMapping("/contact/{productId}")
+    public ResponseEntity<ResponseModel> contactOwner(@PathVariable UUID productId) {
+        return new ResponseEntity<>(productService.emailProductOwner(productId), HttpStatus.CREATED);
+    }
 }

@@ -3,8 +3,11 @@ package com.acgawade.reduca.service;
 import com.acgawade.reduca.entity.Product;
 import com.acgawade.reduca.model.ResponseModel;
 import com.acgawade.reduca.repository.ProductRepository;
+import com.acgawade.reduca.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,10 @@ public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    private JavaMailSender emailSender;
 
     public List<Product> fetchProducts() {
         return productRepository.findByStatus(STATUS_ACTIVE);
@@ -128,5 +135,25 @@ public class ProductService {
                     productRepository.save(product);
                 }
         );
+    }
+
+    public ResponseModel emailProductOwner(UUID productId) {
+        ResponseModel response = new ResponseModel();
+        /* productRepository.findById(productId)
+                .flatMap(product -> userRepository.findById(UUID.fromString(product.getPostedBy())))
+                .ifPresent(user -> sendEmail(user.getEmail())); */
+        sendEmail("gawade.achyut96@gmail.com");
+        response.setStatus("Success");
+        response.setMessage("Operation Successful");
+        return response;
+    }
+
+    private void sendEmail(String emailId) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("reduca.app@gmail.com");
+        message.setTo(emailId);
+        message.setSubject("This is a test email");
+        message.setText("A person has made an enquiry for your product, kindly call or text the potential buyer of your product");
+        emailSender.send(message);
     }
 }
