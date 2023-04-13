@@ -24,6 +24,7 @@ public class Product {
     private String postalCode;
     private BigDecimal price;
     private String yearMade;
+    private String productType;
     private List<String> features;
     private List<String> images;
     private String status;

@@ -152,8 +152,8 @@ public class ProductService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("reduca.app@gmail.com");
         message.setTo(emailId);
-        message.setSubject("This is a test email");
-        message.setText("A person has made an enquiry for your product, kindly call or text the potential buyer of your product");
+        message.setSubject("Enquiry for your cataloged product");
+        message.setText("A person has made an enquiry for your product, kindly call or text the potential buyer of your product ");
         emailSender.send(message);
     }
 }
