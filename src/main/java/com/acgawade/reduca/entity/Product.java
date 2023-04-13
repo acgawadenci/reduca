@@ -16,7 +16,6 @@ import java.util.UUID;
 @Data
 public class Product {
     @Id
-    @GeneratedValue
     private UUID id;
     private String name;
     private String address;
