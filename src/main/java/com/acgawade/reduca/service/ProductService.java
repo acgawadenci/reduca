@@ -40,12 +40,14 @@ public class ProductService {
         ResponseModel response = new ResponseModel();
         try {
             property.setId(UUID.randomUUID());
+            System.out.println("Created ID befor : "+ property.getId().toString());
             property.setStatus("A");
             property.setPostedOn(LocalDateTime.now());
             property.setPostedBy("userPrinciple");
             productRepository.save(property);
             response.setStatus("Success");
             response.setMessage("Operation Successful");
+            System.out.println("Created ID after : "+ property.getId().toString());
             response.setCreationId(property.getId().toString());
         } catch (Exception e) {
             response.setException(e.getLocalizedMessage());
