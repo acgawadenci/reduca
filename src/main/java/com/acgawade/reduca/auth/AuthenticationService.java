@@ -37,7 +37,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public String authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         var user = userRepository.findByUsername(request.getUsername())
@@ -45,7 +45,9 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return jwtToken;
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
     private void saveUserToken(User user, String jwtToken) {

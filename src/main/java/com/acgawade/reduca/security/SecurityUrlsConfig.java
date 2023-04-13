@@ -36,7 +36,7 @@ public class SecurityUrlsConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/product/**","/**")
+                .requestMatchers("/api/v1/product/**","/**","/api/v1/image","/api/v1/image/","/api/v1/image/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
