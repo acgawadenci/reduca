@@ -20,20 +20,20 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
+    public ResponseEntity<List<Product>> getProducts(Principal principal) {
+        System.out.println("See this for api/v1/product: " + principal.getName());
         return new ResponseEntity<>(productService.fetchProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/myProducts")
     public ResponseEntity<List<Product>> getListedProducts(Principal principal) {
-        System.out.println("See this : " + principal.getName());
-        System.out.println("Also See this : " + principal.toString());
+        System.out.println("See this api/v1/product/myProducts: " + principal.getName());
         return new ResponseEntity<>(productService.fetchMyProducts(principal.getName()), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseModel> postProperty(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.CREATED);
+    public ResponseEntity<ResponseModel> postProperty(@RequestBody Product product, Principal principal) {
+        return new ResponseEntity<>(productService.saveProduct(product, principal.getName()), HttpStatus.CREATED);
     }
 
     @PutMapping("/{productId}")

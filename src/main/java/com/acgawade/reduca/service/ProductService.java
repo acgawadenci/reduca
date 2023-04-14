@@ -40,13 +40,13 @@ public class ProductService {
     @Value("${s3ImageUrl}")
     private String s3ImageUrl;
 
-    public ResponseModel saveProduct(Product property) {
+    public ResponseModel saveProduct(Product property, String userName) {
         ResponseModel response = new ResponseModel();
         try {
             property.setId(UUID.randomUUID());
             property.setStatus("A");
             property.setPostedOn(LocalDateTime.now());
-            property.setPostedBy("userPrinciple");
+            property.setPostedBy(userName);
             productRepository.save(property);
             response.setStatus("Success");
             response.setMessage("Operation Successful");
