@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> getProducts() {
         return new ResponseEntity<>(productService.fetchProducts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/myProducts")
+    public ResponseEntity<List<Product>> getListedProducts(Principal principal) {
+        System.out.println("See this : " + principal.getName());
+        System.out.println("Also See this : " + principal.toString());
+        return new ResponseEntity<>(productService.fetchMyProducts(UUID.fromString(principal.getName())), HttpStatus.OK);
     }
 
     @PostMapping

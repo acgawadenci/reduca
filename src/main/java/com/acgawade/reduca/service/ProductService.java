@@ -33,6 +33,10 @@ public class ProductService {
         return productRepository.findByStatus(STATUS_ACTIVE);
     }
 
+    public List<Product> fetchMyProducts(UUID userId) {
+        return productRepository.findByStatusAndPostedBy(STATUS_ACTIVE, userId);
+    }
+
     @Value("${s3ImageUrl}")
     private String s3ImageUrl;
 
@@ -42,7 +46,7 @@ public class ProductService {
             property.setId(UUID.randomUUID());
             property.setStatus("A");
             property.setPostedOn(LocalDateTime.now());
-            property.setPostedBy("userPrinciple");
+            property.setPostedBy(UUID.fromString("userPrinciple"));
             productRepository.save(property);
             response.setStatus("Success");
             response.setMessage("Operation Successful");
@@ -58,7 +62,7 @@ public class ProductService {
         try {
             productRepository.findById(propertyId).ifPresent(
                     savedProperty -> {
-                        if (savedProperty.getPostedBy().equalsIgnoreCase(property.getPostedBy())) {
+                        if (savedProperty.getPostedBy().equals(property.getPostedBy())) {
                             setUpdatedValues(savedProperty, property);
                             productRepository.save(savedProperty);
                             response.setStatus("Success");
@@ -104,7 +108,7 @@ public class ProductService {
         try {
             productRepository.findById(propertyId).ifPresent(
                     savedProperty -> {
-                        if (savedProperty.getPostedBy().equalsIgnoreCase("userPrinciple")) {
+                        if (savedProperty.getPostedBy().equals(UUID.fromString("userPrinciple"))) {
                             savedProperty.setStatus("I");
                             productRepository.save(savedProperty);
                             response.setStatus("Success");
