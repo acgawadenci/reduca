@@ -28,7 +28,7 @@ public class ProductController {
     public ResponseEntity<List<Product>> getListedProducts(Principal principal) {
         System.out.println("See this : " + principal.getName());
         System.out.println("Also See this : " + principal.toString());
-        return new ResponseEntity<>(productService.fetchMyProducts(UUID.fromString(principal.getName())), HttpStatus.OK);
+        return new ResponseEntity<>(productService.fetchMyProducts(principal.getName()), HttpStatus.OK);
     }
 
     @PostMapping

@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findByStatus(String status);
 
-    List<Product> findByStatusAndPostedBy(String status, UUID postedBy);
+    List<Product> findByStatusAndPostedBy(String status, String postedBy);
 }

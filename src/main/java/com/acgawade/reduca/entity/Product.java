@@ -27,7 +27,7 @@ public class Product {
     private List<String> features;
     private List<String> images;
     private String status;
-    private UUID postedBy;
+    private String postedBy;
     private LocalDateTime postedOn;
     private LocalDateTime modifiedOn;
 }

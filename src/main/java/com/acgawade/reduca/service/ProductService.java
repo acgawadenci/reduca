@@ -33,7 +33,7 @@ public class ProductService {
         return productRepository.findByStatus(STATUS_ACTIVE);
     }
 
-    public List<Product> fetchMyProducts(UUID userId) {
+    public List<Product> fetchMyProducts(String userId) {
         return productRepository.findByStatusAndPostedBy(STATUS_ACTIVE, userId);
     }
 
@@ -46,7 +46,7 @@ public class ProductService {
             property.setId(UUID.randomUUID());
             property.setStatus("A");
             property.setPostedOn(LocalDateTime.now());
-            property.setPostedBy(UUID.fromString("userPrinciple"));
+            property.setPostedBy("userPrinciple");
             productRepository.save(property);
             response.setStatus("Success");
             response.setMessage("Operation Successful");
