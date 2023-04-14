@@ -29,12 +29,12 @@ public class User implements UserDetails {
     private String lastname;
     private String password;
     private String email;
-    private Boolean enabled=true;
+    private Boolean enabled = true;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Token> tokens;
 
     @Override
