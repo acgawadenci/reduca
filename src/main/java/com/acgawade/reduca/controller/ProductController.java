@@ -21,13 +21,11 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getProducts(Principal principal) {
-        System.out.println("See this for api/v1/product: " + principal.getName());
         return new ResponseEntity<>(productService.fetchProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/myProducts")
     public ResponseEntity<List<Product>> getListedProducts(Principal principal) {
-        System.out.println("See this api/v1/product/myProducts: " + principal.getName());
         return new ResponseEntity<>(productService.fetchMyProducts(principal.getName()), HttpStatus.OK);
     }
 
