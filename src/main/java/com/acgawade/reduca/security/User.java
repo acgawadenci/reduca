@@ -10,11 +10,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Getter
+@Setter
 @Entity(name = "users")
 public class User implements UserDetails {
     @Id
