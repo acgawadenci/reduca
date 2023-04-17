@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @PostMapping("/contact/{productId}")
-    public ResponseEntity<ResponseModel> contactOwner(@PathVariable UUID productId) {
-        return new ResponseEntity<>(productService.emailProductOwner(productId), HttpStatus.CREATED);
+    public ResponseEntity<ResponseModel> contactOwner(@PathVariable UUID productId, Principal principal) {
+        return new ResponseEntity<>(productService.emailProductOwner(productId, principal.getName()), HttpStatus.CREATED);
     }
 }

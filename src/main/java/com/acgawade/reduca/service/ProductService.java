@@ -4,6 +4,7 @@ import com.acgawade.reduca.entity.Product;
 import com.acgawade.reduca.model.ResponseModel;
 import com.acgawade.reduca.repository.ProductRepository;
 import com.acgawade.reduca.repository.UserRepository;
+import com.acgawade.reduca.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -141,23 +142,32 @@ public class ProductService {
         );
     }
 
-    public ResponseModel emailProductOwner(UUID productId) {
+    public ResponseModel emailProductOwner(UUID productId, String userName) {
         ResponseModel response = new ResponseModel();
-        /* productRepository.findById(productId)
-                .flatMap(product -> userRepository.findById(UUID.fromString(product.getPostedBy())))
-                .ifPresent(user -> sendEmail(user.getEmail())); */
-        sendEmail("gawade.achyut96@gmail.com");
+        Product prod = productRepository.findById(productId).orElse(null);
+        User productUser = null;
+        if (nonNull(prod)) {
+            productUser = userRepository.findByUsername(prod.getPostedBy()).orElse(null);
+        }
+        User enquiryUser = userRepository.findByUsername(userName).orElse(null);
+        if (nonNull(productUser) && nonNull(enquiryUser)) {
+            sendEmail(productUser, enquiryUser, prod);
+        }
         response.setStatus("Success");
         response.setMessage("Operation Successful");
         return response;
     }
 
-    private void sendEmail(String emailId) {
+    private void sendEmail(User productUser, User enquiryUser, Product product) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("reduca.app@gmail.com");
-        message.setTo(emailId);
-        message.setSubject("Enquiry for your cataloged product");
-        message.setText("A person has made an enquiry for your product, kindly call or text the potential buyer of your product ");
+        message.setTo(productUser.getEmail());
+        message.setSubject("Enquiry for your cataloged product : " + product.getName());
+        message.setText("A person has made an enquiry for your product : "
+                + product.getName() +
+                ", kindly call or text the potential buyer of your product </br> Below Are The Details Of Enquirer. <br>" +
+                " Name: " + enquiryUser.getFirstname() + " " + enquiryUser.getLastname() + " </br>" +
+                " Email ID: " + enquiryUser.getEmail() + " </br>");
         emailSender.send(message);
     }
 }
