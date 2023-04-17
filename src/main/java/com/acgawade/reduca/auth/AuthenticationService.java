@@ -20,33 +20,50 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .id(UUID.randomUUID())
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        saveUserToken(savedUser, jwtToken);
+        String message;
+        String jwtToken = null;
+        try {
+            var user = User.builder()
+                    .id(UUID.randomUUID())
+                    .firstname(request.getFirstname())
+                    .lastname(request.getLastname())
+                    .email(request.getEmail())
+                    .username(request.getUsername())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .role(Role.USER)
+                    .build();
+            var savedUser = userRepository.save(user);
+            jwtToken = jwtService.generateToken(user);
+            saveUserToken(savedUser, jwtToken);
+            message = "SUCCESS";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = e.getLocalizedMessage();
+        }
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .message(message)
                 .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        var user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+        String respMessage;
+        String jwtToken = null;
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            var user = userRepository.findByUsername(request.getUsername())
+                    .orElseThrow();
+            jwtToken = jwtService.generateToken(user);
+                revokeAllUserTokens(user);
+            saveUserToken(user, jwtToken);
+            respMessage = "SUCCESS";
+        } catch (Exception e) {
+            respMessage = e.getLocalizedMessage();
+        }
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .message(respMessage)
                 .build();
     }
 
