@@ -165,9 +165,9 @@ public class ProductService {
         message.setSubject("Enquiry for your cataloged product : " + product.getName());
         message.setText("A person has made an enquiry for your product : "
                 + product.getName() +
-                ", kindly call or text the potential buyer of your product </br> Below Are The Details Of Enquirer. <br>" +
-                " Name: " + enquiryUser.getFirstname() + " " + enquiryUser.getLastname() + " </br>" +
-                " Email ID: " + enquiryUser.getEmail() + " </br>");
+                ", kindly Email the potential buyer of your product. Here Is The Details Of Enquirer. " +
+                " Name: " + enquiryUser.getFirstname() + " " + enquiryUser.getLastname() + " " +
+                " Email ID: " + enquiryUser.getEmail());
         emailSender.send(message);
     }
 }
