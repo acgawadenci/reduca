@@ -58,12 +58,12 @@ public class ProductService {
         return response;
     }
 
-    public ResponseModel updateProduct(UUID propertyId, Product property) {
+    public ResponseModel updateProduct(UUID propertyId, Product property, String userName) {
         ResponseModel response = new ResponseModel();
         try {
             productRepository.findById(propertyId).ifPresent(
                     savedProperty -> {
-                        if (savedProperty.getPostedBy().equals(property.getPostedBy())) {
+                        if (savedProperty.getPostedBy().equals(userName)) {
                             setUpdatedValues(savedProperty, property);
                             productRepository.save(savedProperty);
                             response.setStatus("Success");
@@ -104,12 +104,12 @@ public class ProductService {
         property.setModifiedOn(LocalDateTime.now());
     }
 
-    public ResponseModel inactiveProduct(UUID propertyId) {
+    public ResponseModel inactiveProduct(UUID propertyId, String userName) {
         ResponseModel response = new ResponseModel();
         try {
             productRepository.findById(propertyId).ifPresent(
                     savedProperty -> {
-                        if (savedProperty.getPostedBy().equals(UUID.fromString("userPrinciple"))) {
+                        if (savedProperty.getPostedBy().equals(userName)) {
                             savedProperty.setStatus("I");
                             productRepository.save(savedProperty);
                             response.setStatus("Success");

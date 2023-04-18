@@ -36,13 +36,14 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<ResponseModel> updateProperty(@PathVariable UUID productId,
-                                                        @RequestBody Product property) {
-        return new ResponseEntity<>(productService.updateProduct(productId, property), HttpStatus.OK);
+                                                        @RequestBody Product property,
+                                                        Principal principal) {
+        return new ResponseEntity<>(productService.updateProduct(productId, property, principal.getName()), HttpStatus.OK);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<ResponseModel> deleteProperty(@PathVariable UUID productId) {
-        return new ResponseEntity<>(productService.inactiveProduct(productId), HttpStatus.OK);
+    public ResponseEntity<ResponseModel> deleteProperty(@PathVariable UUID productId, Principal principal) {
+        return new ResponseEntity<>(productService.inactiveProduct(productId, principal.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/contact/{productId}")
