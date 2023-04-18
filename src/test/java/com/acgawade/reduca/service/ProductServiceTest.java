@@ -1,13 +1,23 @@
 package com.acgawade.reduca.service;
 
+import com.acgawade.reduca.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
 
+    @Autowired
+    ProductService productService;
+
+    @Mock
+    ProductRepository productRepository;
+
     @Test
     void fetchProducts() {
+        
     }
 
     @Test
