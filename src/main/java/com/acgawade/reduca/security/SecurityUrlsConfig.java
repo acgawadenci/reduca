@@ -37,7 +37,7 @@ public class SecurityUrlsConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/getUser","/api/v1/master","/api/v1/auth/login",
+                .requestMatchers("/getMessage","/api/v1/master","/api/v1/auth/login",
                         "/api/v1/auth/register","/api/v1/product")
                 .permitAll()
                 .anyRequest()

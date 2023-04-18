@@ -17,7 +17,7 @@ class ProductServiceTest {
 
     @Test
     void fetchProducts() {
-        
+
     }
 
     @Test

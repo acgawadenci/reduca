@@ -2,13 +2,11 @@ package com.acgawade.reduca.controller;
 
 import com.acgawade.reduca.repository.ProductRepository;
 import com.acgawade.reduca.repository.UserRepository;
-import com.acgawade.reduca.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 public class DemoController {
@@ -27,8 +25,8 @@ public class DemoController {
         return "This is also my demo Controller, Hello " + userName + " !!!";
     }
 
-    @GetMapping("/getUser")
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    @GetMapping("/getMessage")
+    public String getMessage() {
+        return "You can not get cheaper than here...!!!";
     }
 }
