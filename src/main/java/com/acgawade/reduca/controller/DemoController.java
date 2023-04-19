@@ -27,6 +27,6 @@ public class DemoController {
 
     @GetMapping("/getMessage")
     public String getMessage() {
-        return "You can not get cheaper than here...!!!";
+        return "You can see an updated message now...!!!";
     }
 }
